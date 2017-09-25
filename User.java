@@ -2,10 +2,13 @@ package com.company;
 
 import java.nio.ByteBuffer;
 
+/**
+ * Класс объекты которого хранят имя пользователя и его ByteBuffer
+ */
 public class User {
-    ByteBuffer byteBuffer;
-    String name;
-    int newConnect;
+    private ByteBuffer byteBuffer;
+    private String name;
+    private int newConnect;
 
     User(ByteBuffer byteBuffer) {
         this.newConnect = 0;

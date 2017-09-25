@@ -10,10 +10,15 @@ import java.nio.channels.SocketChannel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Серверная часть чата (работает в одном потоке благодаря использованию NIO)
+ * @version 1.0
+ */
 public class ServerNIO {
     private static final Map<SocketChannel, User> sockets = new ConcurrentHashMap<>();
 
     public static void main(String[] args) throws IOException {
+        //Открываем ServerSocket канал для обработки подключения по адрессу localhost 45001
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.socket().bind(new InetSocketAddress(45001));
         serverChannel.configureBlocking(false);
@@ -22,6 +27,7 @@ public class ServerNIO {
         serverChannel.register(selector, SelectionKey.OP_ACCEPT);
         System.out.println("Server start");
 
+        //Обработка ключей селектора
         while (true) {
             selector.select();
             for (SelectionKey key : selector.selectedKeys()) {
@@ -40,7 +46,7 @@ public class ServerNIO {
                             int bytesRead = socketChannel.read(buffer);
                             User user = sockets.get(socketChannel);
                             if (user.getNewConnect() == 0) {
-
+                                //Обработка сообщения в случае если оно не первое
                                 if (bytesRead > 0 && buffer.get(buffer.position() - 1) == '\n') {
                                     System.out.println("read: " + new String(buffer.array(), 0, bytesRead - 1));
                                     socketChannel.register(selector, SelectionKey.OP_WRITE);
@@ -53,6 +59,7 @@ public class ServerNIO {
                                 }
 
                             } else {
+                                //Обработка первого сообщения от клиента (по соглашению оно является его именем)
                                 user.setName(new String(buffer.array(), 0, bytesRead - 1));
                                 System.out.println("nick: " + user.getName());
                                 socketChannel.register(selector, SelectionKey.OP_READ);

@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerNIO {
     private static final Map<SocketChannel, User> sockets = new ConcurrentHashMap<>();
     //создаем базу данных
-    private static final sqlbdModul dataBase = new sqlbdModul();
+    //private static final sqlbdModul dataBase = new sqlbdModul();
 
     public static void main(String[] args) throws Exception {
         //Открываем ServerSocket канал для обработки подключения по адрессу localhost 45001
@@ -67,7 +67,7 @@ public class ServerNIO {
                                 socketChannel.register(selector, SelectionKey.OP_READ);
                                 buffer.clear();
                                 //Регистрация / Авторизация
-                                if (user.getKey() == 'r') {
+                                /*if (user.getKey() == 'r') {
                                     dataBase.addPerson(user.getName(), user.getPassword());
                                     String lg = dataBase.authorization(user.getName(), user.getPassword());
                                     if (lg == null) {
@@ -82,7 +82,8 @@ public class ServerNIO {
                                     } else {
                                         user.setNewConnect(0);
                                     }
-                                }
+                                }*/
+                                user.setNewConnect(0);
                             }
                     } else if (key.isWritable()) {
                         SocketChannel thisSocketChannel = (SocketChannel)key.channel();
@@ -90,7 +91,7 @@ public class ServerNIO {
                         buffer.flip();
                         String clientMessage = new String(buffer.array(), buffer.position(), buffer.limit());
                         //Добавляем сообщение в БД
-                        dataBase.addMassageBD(sockets.get(thisSocketChannel).getName(),clientMessage);
+                        //dataBase.addMassageBD(sockets.get(thisSocketChannel).getName(),clientMessage);
                         for (Map.Entry<SocketChannel, User> socketChannel2 : sockets.entrySet()) {
                             buffer.clear();
                             buffer.put(ByteBuffer.wrap((sockets.get(thisSocketChannel).getName() + ": " + clientMessage).getBytes()));

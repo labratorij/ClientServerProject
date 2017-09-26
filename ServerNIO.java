@@ -105,7 +105,6 @@ public class ServerNIO {
                                         user.setNewConnect(0);
                                     }
                                 }
-                                user.setNewConnect(0);
                             }
                     } else if (key.isWritable()) {
                         SocketChannel thisSocketChannel = (SocketChannel)key.channel();

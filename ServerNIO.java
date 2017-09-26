@@ -66,14 +66,21 @@ public class ServerNIO {
                                 System.out.println("nick: " + user.getName());
                                 socketChannel.register(selector, SelectionKey.OP_READ);
                                 buffer.clear();
-                                user.setNewConnect(0);
                                 //Регистрация / Авторизация
                                 if (user.getKey() == 'r') {
                                     dataBase.addPerson(user.getName(), user.getPassword());
+                                    String lg = dataBase.authorization(user.getName(), user.getPassword());
+                                    if (lg == null) {
+                                        System.out.println("cant find user");
+                                    } else {
+                                        user.setNewConnect(0);
+                                    }
                                 } else if (user.getKey() == 'a') {
                                     String lg = dataBase.authorization(user.getName(), user.getPassword());
                                     if (lg == null) {
                                         System.out.println("cant find user");
+                                    } else {
+                                        user.setNewConnect(0);
                                     }
                                 }
                             }

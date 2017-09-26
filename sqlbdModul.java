@@ -20,7 +20,7 @@ public class sqlbdModul {
             e.printStackTrace();
         }
     }
-    //диструктор класса закрывает все переменные и соединения
+    //деструктор класса закрывает все переменные и соединения
     protected void finalize(){
         try {
             connection.close();

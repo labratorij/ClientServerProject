@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -19,7 +20,7 @@ public class ServerNIO {
     //создаем базу данных
     private static final sqlbdModul dataBase = new sqlbdModul();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         //Открываем ServerSocket канал для обработки подключения по адрессу localhost 45001
         ServerSocketChannel serverChannel = ServerSocketChannel.open();
         serverChannel.socket().bind(new InetSocketAddress(45001));
@@ -41,11 +42,21 @@ public class ServerNIO {
                         User user = new User(ByteBuffer.allocate(1024));
                         sockets.put(socketChannel, user);
                         socketChannel.register(selector, SelectionKey.OP_READ);
+                        //Вывод предыдущих 10 сообщений
+                        ArrayList<String> lastMsg = dataBase.getAllMessege();
+                        for (String msg : lastMsg) {
+                            socketChannel.write(ByteBuffer.wrap((msg + "\n").getBytes()));
+                        }
                         user.setNewConnect(1); //говорит о том что первая строка - это ник
                     } else if (key.isReadable()) {
                             SocketChannel socketChannel = (SocketChannel) key.channel();
                             ByteBuffer buffer = sockets.get(socketChannel).getByteBuffer();
-                            int bytesRead = socketChannel.read(buffer);
+                            int bytesRead = 0;
+                            try {
+                                bytesRead = socketChannel.read(buffer);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                             User user = sockets.get(socketChannel);
                             if (user.getNewConnect() == 0) {
                                 //Обработка сообщения в случае если оно не первое
@@ -69,20 +80,32 @@ public class ServerNIO {
                                 //Регистрация / Авторизация
                                 if (user.getKey() == 'r') {
                                     dataBase.addPerson(user.getName(), user.getPassword());
-                                    String lg = dataBase.authorization(user.getName(), user.getPassword());
+                                    String lg = null;
+                                    try {
+                                        lg = dataBase.authorization(user.getName(), user.getPassword());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     if (lg == null) {
                                         System.out.println("cant find user");
                                     } else {
                                         user.setNewConnect(0);
                                     }
                                 } else if (user.getKey() == 'a') {
-                                    String lg = dataBase.authorization(user.getName(), user.getPassword());
+                                    String lg = null;
+                                    try {
+                                        lg = dataBase.authorization(user.getName(), user.getPassword());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                     if (lg == null) {
                                         System.out.println("cant find user");
+                                        socketChannel.write(ByteBuffer.wrap("Error. Check your login / password \n".getBytes()));
                                     } else {
                                         user.setNewConnect(0);
                                     }
                                 }
+                                user.setNewConnect(0);
                             }
                     } else if (key.isWritable()) {
                         SocketChannel thisSocketChannel = (SocketChannel)key.channel();

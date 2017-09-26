@@ -39,17 +39,21 @@ public class User {
         key = name.charAt(0);
         this.name = "";
         password = "";
+        StringBuilder nameBr = new StringBuilder();
+        StringBuilder passwordBr = new StringBuilder();
+
         for (int i = 1; i < name.length(); i++) {
             if (name.charAt(i) != '$' && after == 0) {
-                password += name.charAt(i);
+                passwordBr.append(name.charAt(i));
             } else {
                 after = 1;
             }
             if (name.charAt(i) != '$' && after == 1) {
-                this.name += name.charAt(i);
+                nameBr.append(name.charAt(i));
             }
         }
-        //this.name = name;
+        this.name = nameBr.toString();
+        password = passwordBr.toString();
     }
 
     public void setNewConnect(int newConnect) {

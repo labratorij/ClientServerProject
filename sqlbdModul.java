@@ -36,8 +36,6 @@ public class sqlbdModul {
         String sqlAuthorization1 = "select* from chatproject.person where name = " +"\'"+ login + "\'";
         resultSet = null;
         try {
-
-
             resultSet = statement.executeQuery(sqlAuthorization1);
             if(resultSet.next())
                 if(resultSet.getString("name").equals(login)){

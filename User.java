@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 public class User {
     private ByteBuffer byteBuffer;
     private String name;
+    private String password;
+    private char key;
     private int newConnect;
 
     User(ByteBuffer byteBuffer) {
@@ -33,10 +35,32 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        int after = 0;
+        key = name.charAt(0);
+        this.name = "";
+        password = "";
+        for (int i = 1; i < name.length(); i++) {
+            if (name.charAt(i) != '$' && after == 0) {
+                password += name.charAt(i);
+            } else {
+                after = 1;
+            }
+            if (name.charAt(i) != '$' && after == 1) {
+                this.name += name.charAt(i);
+            }
+        }
+        //this.name = name;
     }
 
     public void setNewConnect(int newConnect) {
         this.newConnect = newConnect;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public char getKey() {
+        return key;
     }
 }

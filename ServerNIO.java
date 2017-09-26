@@ -42,11 +42,6 @@ public class ServerNIO {
                         User user = new User(ByteBuffer.allocate(1024));
                         sockets.put(socketChannel, user);
                         socketChannel.register(selector, SelectionKey.OP_READ);
-                        //Вывод предыдущих 10 сообщений
-                        ArrayList<String> lastMsg = dataBase.getAllMessege();
-                        for (String msg : lastMsg) {
-                            socketChannel.write(ByteBuffer.wrap((msg + "\n").getBytes()));
-                        }
                         user.setNewConnect(1); //говорит о том что первая строка - это ник
                     } else if (key.isReadable()) {
                             SocketChannel socketChannel = (SocketChannel) key.channel();
@@ -102,6 +97,11 @@ public class ServerNIO {
                                         System.out.println("cant find user");
                                         socketChannel.write(ByteBuffer.wrap("Error. Check your login / password \n".getBytes()));
                                     } else {
+                                        //Вывод предыдущих 10 сообщений
+                                        ArrayList<String> lastMsg = dataBase.getAllMessege();
+                                        for (String msg : lastMsg) {
+                                            socketChannel.write(ByteBuffer.wrap((msg + "\n").getBytes()));
+                                        }
                                         user.setNewConnect(0);
                                     }
                                 }

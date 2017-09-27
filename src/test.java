@@ -9,11 +9,9 @@ public class test {
 //            sql.readDataBase();
 //            System.out.println(sql.authorization("admin", "admin"));
 //            sql.addPerson("enchar","admin");
-            sql.addMassageBD("admin","test this app and add massage in bd");
-            ArrayList<String> all = sql.getAllMessege();
-            for(String str:all){
-                System.out.println(str);
-            }
+
+
+            System.out.println(sql.getAllMessege());
 
 
         } catch (Exception e) {

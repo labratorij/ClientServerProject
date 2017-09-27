@@ -18,7 +18,7 @@ public class sqlbdModul {
             e.printStackTrace();
         }
     }
-    //диструктор класса закрывает все переменные и соединения
+    //деструктор класса закрывает все переменные и соединения
     protected void finalize(){
         try {
             connection.close();
@@ -34,15 +34,13 @@ public class sqlbdModul {
         String sqlAuthorization1 = "select* from chatproject.person where name = " +"\'"+ login + "\'";
         resultSet = null;
         try {
-
-
             resultSet = statement.executeQuery(sqlAuthorization1);
             if(resultSet.next())
-            if(resultSet.getString("name").equals(login)){
-                if(resultSet.getString("password").equals(pass)){
-                    return login;
+                if(resultSet.getString("name").equals(login)){
+                    if(resultSet.getString("password").equals(pass)){
+                        return login;
+                    }
                 }
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,8 +61,8 @@ public class sqlbdModul {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        String insert = " insert into person (idPerson,name,password)"
-                + " values (2,"+"\'"+login+"\',\'"+password+"\')";
+        String insert = " insert into person (name,password)"
+                + " values ("+"\'"+login+"\',\'"+password+"\')";
         try {
             statement.executeUpdate(insert);
         } catch (SQLException e) {

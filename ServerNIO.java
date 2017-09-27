@@ -46,11 +46,10 @@ public class ServerNIO {
                     } else if (key.isReadable()) {
                             SocketChannel socketChannel = (SocketChannel) key.channel();
                             ByteBuffer buffer = sockets.get(socketChannel).getByteBuffer();
-                            int bytesRead = 0;
+                            int bytesRead = -1;
                             try {
                                 bytesRead = socketChannel.read(buffer);
                             } catch (IOException e) {
-                                e.printStackTrace();
                             }
                             User user = sockets.get(socketChannel);
                             if (user.getNewConnect() == 0) {

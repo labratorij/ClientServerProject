@@ -9,8 +9,8 @@ public class sqlbdModul {
     private Statement statement = null;
     private ResultSet resultSet = null;
     private static final String url = "jdbc:mysql://localhost:3306/chatproject?useSSL=false";
-    private static final String user = "admin";
-    private static final String password = "admin";
+    private static final String user = "root";
+    private static final String password = "password";
     //конструктор класса
     public sqlbdModul(){
         try {
@@ -60,18 +60,18 @@ public class sqlbdModul {
                     return;
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        String insert = " insert into person (idPerson,name,password)"
-                + " values (2,"+"\'"+login+"\',\'"+password+"\')";
-        try {
-            statement.executeUpdate(insert);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    String insert = " insert into person (idPerson,name,password)"
+            + " values (2,"+"\'"+login+"\',\'"+password+"\')";
+        try {
+        statement.executeUpdate(insert);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+}
     //добавления в список нового сообщения
     public void addMassageBD(String login, String text){
         String sql = "insert into messege (namePerson,text)values(\'"+login+"\',\'"+text+"\')";
@@ -94,7 +94,7 @@ public class sqlbdModul {
             resultSet = statement.executeQuery("select* from messege");
             while(resultSet.next()){
                 System.out.println(resultSet.getString("idMessege"));
-                allMessage.add(resultSet.getString("namePerson")+"-> " + resultSet.getString("text"));
+                allMessage.add(resultSet.getString("namePerson")+": " + resultSet.getString("text"));
 
             }
         } catch (SQLException e) {

@@ -82,7 +82,13 @@ public class ServerNIO {
                                     }
                                     if (lg == null) {
                                         System.out.println("cant find user");
+                                        socketChannel.write(ByteBuffer.wrap("Error. Check your login / password \n".getBytes()));
                                     } else {
+                                        //Вывод предыдущих 10 сообщений
+                                        ArrayList<String> lastMsg = dataBase.getAllMessege();
+                                        for (String msg : lastMsg) {
+                                            socketChannel.write(ByteBuffer.wrap((msg).getBytes()));
+                                        }
                                         user.setNewConnect(0);
                                     }
                                 } else if (user.getKey() == 'a') {
@@ -99,7 +105,7 @@ public class ServerNIO {
                                         //Вывод предыдущих 10 сообщений
                                         ArrayList<String> lastMsg = dataBase.getAllMessege();
                                         for (String msg : lastMsg) {
-                                            socketChannel.write(ByteBuffer.wrap((msg + "\n").getBytes()));
+                                            socketChannel.write(ByteBuffer.wrap((msg).getBytes()));
                                         }
                                         user.setNewConnect(0);
                                     }

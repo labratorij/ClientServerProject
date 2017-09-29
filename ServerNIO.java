@@ -81,8 +81,8 @@ public class ServerNIO {
                                         e.printStackTrace();
                                     }
                                     if (lg == null) {
-                                        System.out.println("cant find user");
-                                        socketChannel.write(ByteBuffer.wrap("Error. Check your login / password \n".getBytes()));
+                                        System.out.println("registration error");
+                                        socketChannel.write(ByteBuffer.wrap("Registration error \n".getBytes()));
                                     } else {
                                         //Вывод предыдущих 10 сообщений
                                         ArrayList<String> lastMsg = dataBase.getAllMessege();
